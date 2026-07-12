@@ -169,75 +169,72 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
                     &quot;{customer.dialogueAr}&quot;
                   </div>
 
-                  {/* KITCHEN ORDER TICKET 🧾 (Direct & Extremely Clear Request) */}
-                  <div className="bg-slate-950 rounded-xl border border-slate-800 p-3 space-y-3 shadow-inner relative">
-                    <div className="flex items-center justify-between border-b border-dashed border-slate-800 pb-2 text-[10px] font-black tracking-wider text-amber-400">
-                      <span>📝 بون طلب المطبخ المعتمد</span>
+                  {/* KITCHEN ORDER TICKET 🧾 (Optimized & Beautiful Thermal Receipt Design) */}
+                  <div className="bg-[#FCFAF2] text-slate-900 rounded-xl border border-amber-950/10 p-3 space-y-2.5 shadow-md relative border-l-4 border-l-amber-500">
+                    {/* Receipt Header */}
+                    <div className="flex items-center justify-between border-b border-dashed border-slate-300 pb-1.5 text-[10px] font-black tracking-wider text-slate-700">
+                      <span className="flex items-center gap-1">📋 بون المطبخ المعتمد</span>
                       <span className="font-mono text-slate-500 text-[9px]">بون #{customer.id.split('_')[2] || '1'}</span>
                     </div>
 
-                    {/* Core Recipe Config */}
-                    <div className="grid grid-cols-3 gap-1.5 text-center text-xs">
-                      {/* Bread component */}
-                      <div className={`p-1.5 rounded-lg border flex flex-col items-center justify-center gap-0.5 ${
-                        currentWrap && matchStatus?.breadMatch 
-                          ? 'bg-emerald-950/20 border-emerald-500/30' 
-                          : currentWrap 
-                          ? 'bg-rose-950/15 border-rose-500/15' 
-                          : 'bg-slate-900 border-slate-850'
-                      }`}>
-                        <span className="text-sm">🫓</span>
-                        <span className="text-[9px] text-slate-400 block font-bold">الخبز المطلوب</span>
-                        <span className="font-black text-[10px] text-amber-200">
-                          {order.bread === 'saj' ? 'خبز صاج' : 'خبز عربي'}
-                        </span>
+                    {/* Core Recipe Config (Horizontal Clean Layout) */}
+                    <div className="space-y-1.5 text-xs font-sans">
+                      {/* Bread */}
+                      <div className="flex items-center justify-between border-b border-slate-200/40 pb-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm">🫓</span>
+                          <span className="text-[10px] text-slate-500 font-bold">الخبز:</span>
+                          <span className="font-black text-slate-900">
+                            {order.bread === 'saj' ? 'خبز صاج' : 'خبز عربي'}
+                          </span>
+                        </div>
                         {currentWrap && (
-                          <span className={`text-[8px] font-bold px-1 rounded ${matchStatus?.breadMatch ? 'text-emerald-400 bg-emerald-500/10' : 'text-rose-400 bg-rose-500/10'}`}>
+                          <span className={`text-[9px] font-black px-1.5 py-0.2 rounded ${
+                            matchStatus?.breadMatch 
+                              ? 'text-emerald-700 bg-emerald-100' 
+                              : 'text-rose-700 bg-rose-100'
+                          }`}>
                             {matchStatus?.breadMatch ? '✓ صحيح' : '✗ خاطئ'}
                           </span>
                         )}
                       </div>
 
-                      {/* Meat component */}
-                      <div className={`p-1.5 rounded-lg border flex flex-col items-center justify-center gap-0.5 ${
-                        currentWrap && matchStatus?.meatMatch 
-                          ? 'bg-emerald-950/20 border-emerald-500/30' 
-                          : currentWrap 
-                          ? 'bg-rose-950/15 border-rose-500/15' 
-                          : 'bg-slate-900 border-slate-850'
-                      }`}>
-                        <span className="text-sm">🥩</span>
-                        <span className="text-[9px] text-slate-400 block font-bold">الحشوة الأساسية</span>
-                        <span className={`font-black text-[10px] ${
-                          order.meat === 'chicken' ? 'text-amber-300' :
-                          order.meat === 'beef' ? 'text-rose-300' :
-                          'text-purple-300'
-                        }`}>
-                          {order.meat === 'chicken' ? 'دجاج' :
-                           order.meat === 'beef' ? 'لحم عجل' : 'دبل مشكل'}
-                        </span>
+                      {/* Meat */}
+                      <div className="flex items-center justify-between border-b border-slate-200/40 pb-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm">🥩</span>
+                          <span className="text-[10px] text-slate-500 font-bold">الحشوة:</span>
+                          <span className="font-black text-slate-900">
+                            {order.meat === 'chicken' ? 'دجاج' :
+                             order.meat === 'beef' ? 'لحم عجل' : 'مشكل دبل'}
+                          </span>
+                        </div>
                         {currentWrap && (
-                          <span className={`text-[8px] font-bold px-1 rounded ${matchStatus?.meatMatch ? 'text-emerald-400 bg-emerald-500/10' : 'text-rose-400 bg-rose-500/10'}`}>
+                          <span className={`text-[9px] font-black px-1.5 py-0.2 rounded ${
+                            matchStatus?.meatMatch 
+                              ? 'text-emerald-700 bg-emerald-100' 
+                              : 'text-rose-700 bg-rose-100'
+                          }`}>
                             {matchStatus?.meatMatch ? '✓ صحيح' : '✗ خاطئ'}
                           </span>
                         )}
                       </div>
 
-                      {/* Serving Style component */}
-                      <div className={`p-1.5 rounded-lg border flex flex-col items-center justify-center gap-0.5 ${
-                        currentWrap && matchStatus?.serveMatch 
-                          ? 'bg-emerald-950/20 border-emerald-500/30' 
-                          : currentWrap 
-                          ? 'bg-rose-950/15 border-rose-500/15' 
-                          : 'bg-slate-900 border-slate-850'
-                      }`}>
-                        <span className="text-sm">🍽️</span>
-                        <span className="text-[9px] text-slate-400 block font-bold">التقديم النهائي</span>
-                        <span className="font-black text-[10px] text-amber-200">
-                          {order.serveType === 'arabic' ? 'وجبة عربي 🍱' : 'ساندويش 🌯'}
-                        </span>
+                      {/* Serving Style */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm">🍽️</span>
+                          <span className="text-[10px] text-slate-500 font-bold">التقديم:</span>
+                          <span className="font-black text-slate-900">
+                            {order.serveType === 'arabic' ? 'وجبة عربي 🍱' : 'ساندويش 🌯'}
+                          </span>
+                        </div>
                         {currentWrap && (
-                          <span className={`text-[8px] font-bold px-1 rounded ${matchStatus?.serveMatch ? 'text-emerald-400 bg-emerald-500/10' : 'text-rose-400 bg-rose-500/10'}`}>
+                          <span className={`text-[9px] font-black px-1.5 py-0.2 rounded ${
+                            matchStatus?.serveMatch 
+                              ? 'text-emerald-700 bg-emerald-100' 
+                              : 'text-rose-700 bg-rose-100'
+                          }`}>
                             {matchStatus?.serveMatch ? '✓ صحيح' : '✗ خاطئ'}
                           </span>
                         )}
@@ -245,17 +242,17 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
                     </div>
 
                     {/* Extras Requested list */}
-                    <div className="space-y-1.5 border-t border-dashed border-slate-800 pt-2 text-right">
-                      <span className="text-[9px] text-slate-400 font-bold block">المكونات والإضافات المطلوبة (المحبوبة):</span>
+                    <div className="space-y-1 border-t border-dashed border-slate-300 pt-2 text-right">
+                      <span className="text-[9px] text-slate-500 font-bold block">➕ الإضافات المطلوبة:</span>
                       <div className="flex flex-wrap gap-1">
                         {/* Garlic */}
                         {order.garlic && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 transition-all ${
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
                             currentWrap && currentWrap.sauces.garlic 
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-bold' 
+                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
                               : currentWrap 
-                              ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' 
-                              : 'bg-slate-900 text-amber-200 border-slate-850'
+                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
+                              : 'bg-white text-slate-700 border-slate-200'
                           }`}>
                             <span>🧄 ثومية</span>
                             {currentWrap && (currentWrap.sauces.garlic ? '✓' : '⚠️')}
@@ -264,12 +261,12 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
 
                         {/* Tahini */}
                         {order.tahini && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 transition-all ${
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
                             currentWrap && currentWrap.sauces.tahini 
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-bold' 
+                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
                               : currentWrap 
-                              ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' 
-                              : 'bg-slate-900 text-yellow-400 border-slate-850'
+                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
+                              : 'bg-white text-slate-700 border-slate-200'
                           }`}>
                             <span>🧅 طحينة</span>
                             {currentWrap && (currentWrap.sauces.tahini ? '✓' : '⚠️')}
@@ -278,54 +275,54 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
 
                         {/* Spicy */}
                         {order.spicy && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 transition-all ${
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
                             currentWrap && currentWrap.sauces.spicy 
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-bold' 
+                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
                               : currentWrap 
-                              ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' 
-                              : 'bg-slate-900 text-red-400 border-slate-850'
+                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
+                              : 'bg-white text-slate-700 border-slate-200'
                           }`}>
-                            <span>🌶️ شطة حارة</span>
+                            <span>🌶️ شطة</span>
                             {currentWrap && (currentWrap.sauces.spicy ? '✓' : '⚠️')}
                           </span>
                         )}
 
-                        {/* Pickles (if requested) */}
+                        {/* Pickles */}
                         {order.pickles && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 transition-all ${
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
                             currentWrap && currentWrap.fillings.pickles 
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-bold' 
+                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
                               : currentWrap 
-                              ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' 
-                              : 'bg-slate-900 text-emerald-400 border-slate-850'
+                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
+                              : 'bg-white text-slate-700 border-slate-200'
                           }`}>
                             <span>🥒 مخلل</span>
                             {currentWrap && (currentWrap.fillings.pickles ? '✓' : '⚠️')}
                           </span>
                         )}
 
-                        {/* Fries (if requested) */}
+                        {/* Fries */}
                         {order.fries && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 transition-all ${
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
                             currentWrap && currentWrap.fillings.fries 
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-bold' 
+                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
                               : currentWrap 
-                              ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' 
-                              : 'bg-slate-900 text-yellow-500 border-slate-850'
+                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
+                              : 'bg-white text-slate-700 border-slate-200'
                           }`}>
                             <span>🍟 بطاطا</span>
                             {currentWrap && (currentWrap.fillings.fries ? '✓' : '⚠️')}
                           </span>
                         )}
 
-                        {/* Pomegranate (if requested) */}
+                        {/* Pomegranate */}
                         {order.pomegranate && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 transition-all ${
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
                             currentWrap && currentWrap.fillings.pomegranate 
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-bold' 
+                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
                               : currentWrap 
-                              ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' 
-                              : 'bg-slate-900 text-purple-400 border-slate-850'
+                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
+                              : 'bg-white text-slate-700 border-slate-200'
                           }`}>
                             <span>🍯 دبس رمان</span>
                             {currentWrap && (currentWrap.fillings.pomegranate ? '✓' : '⚠️')}
@@ -334,33 +331,33 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
                       </div>
                     </div>
 
-                    {/* Exclusions checklist - highlighted in red */}
+                    {/* Exclusions list - highlighted in red */}
                     {(!order.pickles || !order.fries) && (
-                      <div className="space-y-1.5 border-t border-dashed border-slate-800 pt-2 text-right">
-                        <span className="text-[9px] text-rose-400 font-bold block">⚠️ تحذير المطبخ (ممنوع منعا باتا):</span>
+                      <div className="space-y-1 border-t border-dashed border-slate-300 pt-2 text-right">
+                        <span className="text-[9px] text-rose-600 font-bold block">🚫 ممنوع منعا باتا (تحذير):</span>
                         <div className="flex flex-wrap gap-1">
                           {!order.pickles && (
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 font-bold ${
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 font-bold ${
                               currentWrap && currentWrap.fillings.pickles 
-                                ? 'bg-rose-600/30 text-rose-300 border-rose-500 animate-pulse' 
+                                ? 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse' 
                                 : currentWrap 
-                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-                                : 'bg-rose-950/40 text-rose-400 border-rose-900'
+                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
+                                : 'bg-[#FFF5F5] text-rose-700 border-rose-200'
                             }`}>
-                              <span>🚫 بدون مخلل</span>
+                              <span>بدون مخلل</span>
                               {currentWrap && (currentWrap.fillings.pickles ? '❌ خطأ!' : '✓')}
                             </span>
                           )}
 
                           {!order.fries && (
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 font-bold ${
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 font-bold ${
                               currentWrap && currentWrap.fillings.fries 
-                                ? 'bg-rose-600/30 text-rose-300 border-rose-500 animate-pulse' 
+                                ? 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse' 
                                 : currentWrap 
-                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-                                : 'bg-rose-950/40 text-rose-400 border-rose-900'
+                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
+                                : 'bg-[#FFF5F5] text-rose-700 border-rose-200'
                             }`}>
-                              <span>🚫 بدون بطاطا</span>
+                              <span>بدون بطاطا</span>
                               {currentWrap && (currentWrap.fillings.fries ? '❌ خطأ!' : '✓')}
                             </span>
                           )}
@@ -370,14 +367,14 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
 
                     {/* Realtime Live assembly matching state */}
                     {currentWrap && (
-                      <div className="border-t border-dashed border-slate-800 pt-2 flex items-center justify-between text-[10px] font-bold">
-                        <span className="text-slate-500">حالة التطابق المباشر:</span>
+                      <div className="border-t border-dashed border-slate-300 pt-2 flex items-center justify-between text-[10px] font-bold text-slate-500">
+                        <span>حالة التطابق المباشر:</span>
                         <span className={`px-2 py-0.5 rounded-full ${
                           matchStatus?.allMatch 
-                            ? 'bg-emerald-500/20 text-emerald-400' 
-                            : 'bg-amber-500/15 text-amber-300'
+                            ? 'bg-emerald-100 text-emerald-800' 
+                            : 'bg-amber-100 text-amber-800'
                         }`}>
-                          {matchStatus?.allMatch ? '🎯 طلب متطابق ومثالي!' : '⌛ قيد التعديل والتحضير'}
+                          {matchStatus?.allMatch ? '🎯 متطابق ومثالي!' : '⌛ قيد التحضير والتعديل'}
                         </span>
                       </div>
                     )}
