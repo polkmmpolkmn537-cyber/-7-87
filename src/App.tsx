@@ -11,6 +11,7 @@ import { Workstation } from './components/Workstation';
 import { DaySetup } from './components/DaySetup';
 import { EndDayReport } from './components/EndDayReport';
 import { UpgradesMenu } from './components/UpgradesMenu';
+import { ShawarmaHelper } from './components/ShawarmaHelper';
 import { sfx } from './utils/audio';
 import { Flame, DollarSign, Clock, Volume2, VolumeX, HelpCircle, ArrowLeft, RotateCcw, TrendingUp, HelpCircle as QuestionIcon, Plus, Eye, Music, Star, Sparkles, AlertCircle, Check, Settings } from 'lucide-react';
 
@@ -78,22 +79,132 @@ const CUSTOMER_NAMES = [
 
 export default function App() {
   // Game persistent states
-  const [money, setMoney] = useState<number>(150.00);
-  const [inventory, setInventory] = useState<Inventory>(INITIAL_INVENTORY);
-  const [upgrades, setUpgrades] = useState<ShopUpgrades>(INITIAL_UPGRADES);
-  const [dayNumber, setDayNumber] = useState<number>(1);
-  const [reputation, setReputation] = useState<number>(80); // 0 to 100%
+  const [money, setMoney] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('shawarma_tycoon_money');
+      return saved !== null ? JSON.parse(saved) : 150.00;
+    } catch {
+      return 150.00;
+    }
+  });
+
+  const [inventory, setInventory] = useState<Inventory>(() => {
+    try {
+      const saved = localStorage.getItem('shawarma_tycoon_inventory');
+      return saved !== null ? JSON.parse(saved) : INITIAL_INVENTORY;
+    } catch {
+      return INITIAL_INVENTORY;
+    }
+  });
+
+  const [upgrades, setUpgrades] = useState<ShopUpgrades>(() => {
+    try {
+      const saved = localStorage.getItem('shawarma_tycoon_upgrades');
+      return saved !== null ? { ...INITIAL_UPGRADES, ...JSON.parse(saved) } : INITIAL_UPGRADES;
+    } catch {
+      return INITIAL_UPGRADES;
+    }
+  });
+
+  const [dayNumber, setDayNumber] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('shawarma_tycoon_dayNumber');
+      return saved !== null ? JSON.parse(saved) : 1;
+    } catch {
+      return 1;
+    }
+  });
+
+  const [reputation, setReputation] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('shawarma_tycoon_reputation');
+      return saved !== null ? JSON.parse(saved) : 80;
+    } catch {
+      return 80;
+    }
+  });
 
   // Screen routing state
-  const [gameState, setGameState] = useState<'tutorial' | 'setup' | 'playing' | 'report'>('tutorial');
+  const [gameState, setGameState] = useState<'tutorial' | 'setup' | 'playing' | 'report'>(() => {
+    try {
+      const savedMoney = localStorage.getItem('shawarma_tycoon_money');
+      if (savedMoney !== null) {
+        return 'setup'; // Skip tutorial and resume game if there is a save
+      }
+      return 'tutorial';
+    } catch {
+      return 'tutorial';
+    }
+  });
 
   // Interactive gameplay states
   const [activeTab, setActiveTab] = useState<'customers' | 'prep' | 'skewers'>('prep'); // mobile tab selector
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [currentWrap, setCurrentWrap] = useState<ShawarmaWrap | null>(null);
-  const [configuredDayDuration, setConfiguredDayDuration] = useState<number>(120);
+
+  const [configuredDayDuration, setConfiguredDayDuration] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('shawarma_tycoon_dayDuration');
+      return saved !== null ? JSON.parse(saved) : 120;
+    } catch {
+      return 120;
+    }
+  });
+
   const [dayTimer, setDayTimer] = useState<number>(120); // counts down during active day
   const [isMuted, setIsMuted] = useState<boolean>(false);
+
+  // Synchronize state changes to localStorage (Auto-save)
+  useEffect(() => {
+    try {
+      localStorage.setItem('shawarma_tycoon_money', JSON.stringify(money));
+    } catch (e) {
+      console.error('Failed to save money to localStorage', e);
+    }
+  }, [money]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('shawarma_tycoon_inventory', JSON.stringify(inventory));
+    } catch (e) {
+      console.error('Failed to save inventory to localStorage', e);
+    }
+  }, [inventory]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('shawarma_tycoon_upgrades', JSON.stringify(upgrades));
+    } catch (e) {
+      console.error('Failed to save upgrades to localStorage', e);
+    }
+  }, [upgrades]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('shawarma_tycoon_dayNumber', JSON.stringify(dayNumber));
+    } catch (e) {
+      console.error('Failed to save dayNumber to localStorage', e);
+    }
+  }, [dayNumber]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('shawarma_tycoon_reputation', JSON.stringify(reputation));
+    } catch (e) {
+      console.error('Failed to save reputation to localStorage', e);
+    }
+  }, [reputation]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('shawarma_tycoon_dayDuration', JSON.stringify(configuredDayDuration));
+    } catch (e) {
+      console.error('Failed to save dayDuration to localStorage', e);
+    }
+  }, [configuredDayDuration]);
+
+  // UI State for reset confirmation inside Settings Modal
+  const [showResetConfirm, setShowResetConfirm] = useState<boolean>(false);
 
   // Background music states & Custom Interactive feedback toast
   const [isMusicPlaying, setIsMusicPlaying] = useState<boolean>(false);
@@ -843,7 +954,13 @@ export default function App() {
       </header>
 
       {/* Main Screen Content Router */}
-      <main className="max-w-7xl mx-auto px-4 py-6 flex-1 w-full flex flex-col justify-center items-stretch">
+      <main className="max-w-7xl mx-auto px-4 py-6 flex-1 w-full flex flex-col justify-center items-stretch gap-5">
+        {(gameState === 'setup' || gameState === 'playing') && (
+          <div className="w-full">
+            <ShawarmaHelper />
+          </div>
+        )}
+
         {/* TUTORIAL / SPLASH STATE */}
         {gameState === 'tutorial' && (
           <div className="bg-slate-900/85 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-2xl mx-auto text-center space-y-6 shadow-2xl backdrop-blur-md">
@@ -1308,6 +1425,69 @@ export default function App() {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Reset Game Section */}
+              <div className="border-t border-slate-850 pt-4 space-y-2">
+                <span className="text-xs text-slate-400 font-bold block">إعادة ضبط اللعبة وحذف البيانات:</span>
+                
+                {!showResetConfirm ? (
+                  <button
+                    onClick={() => {
+                      sfx.playWrap();
+                      setShowResetConfirm(true);
+                    }}
+                    className="w-full py-2 bg-rose-950/30 hover:bg-rose-950/50 border border-rose-500/20 hover:border-rose-500/40 text-rose-300 font-bold rounded-lg text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-rose-400" />
+                    <span>إعادة ضبط تقدم اللعبة بالكامل 🔄</span>
+                  </button>
+                ) : (
+                  <div className="bg-rose-950/20 border border-rose-500/30 rounded-xl p-3 space-y-3 animate-in fade-in zoom-in duration-200">
+                    <p className="text-[10px] text-rose-300 leading-relaxed font-bold text-center">
+                      ⚠️ هل أنت متأكد؟ سيتم حذف جميع الأموال، الترقيات، المخزون، واليوم الحالي نهائياً! لا يمكن التراجع عن هذا الإجراء.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 text-center">
+                      <button
+                        onClick={() => {
+                          sfx.playWrap();
+                          setShowResetConfirm(false);
+                        }}
+                        className="py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-lg text-[10px] cursor-pointer"
+                      >
+                        تراجع وإلغاء
+                      </button>
+                      <button
+                        onClick={() => {
+                          try {
+                            localStorage.removeItem('shawarma_tycoon_money');
+                            localStorage.removeItem('shawarma_tycoon_inventory');
+                            localStorage.removeItem('shawarma_tycoon_upgrades');
+                            localStorage.removeItem('shawarma_tycoon_dayNumber');
+                            localStorage.removeItem('shawarma_tycoon_reputation');
+                            localStorage.removeItem('shawarma_tycoon_dayDuration');
+                          } catch (e) {
+                            console.error('Failed to clear localStorage', e);
+                          }
+
+                          setMoney(150.00);
+                          setInventory(INITIAL_INVENTORY);
+                          setUpgrades(INITIAL_UPGRADES);
+                          setDayNumber(1);
+                          setReputation(80);
+                          setConfiguredDayDuration(120);
+                          setGameState('tutorial');
+                          setShowResetConfirm(false);
+                          setShowSettingsModal(false);
+                          sfx.playCoin();
+                        }}
+                        className="py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-black rounded-lg text-[10px] cursor-pointer"
+                      >
+                        نعم، امسح كل تقدمي!
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {gameState === 'playing' && (

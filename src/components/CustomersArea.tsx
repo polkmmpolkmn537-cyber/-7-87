@@ -117,7 +117,7 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -50, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-4 transition-all flex flex-col gap-3 relative overflow-hidden group shadow-md"
+                  className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-4 transition-all flex flex-col gap-3 relative overflow-hidden group shadow-md shrink-0"
                 >
                   {/* Patience Background Glow for critical state */}
                   {patiencePercentage < 25 && (
@@ -169,8 +169,8 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
                     &quot;{customer.dialogueAr}&quot;
                   </div>
 
-                  {/* KITCHEN ORDER TICKET 🧾 (Optimized & Beautiful Thermal Receipt Design) */}
-                  <div className="bg-[#FCFAF2] text-slate-900 rounded-xl border border-amber-950/10 p-3 space-y-2.5 shadow-md relative border-l-4 border-l-amber-500">
+                  {/* KITCHEN ORDER TICKET 🧾 (Optimized & Beautiful Thermal Receipt Design with Realtime Checkers) */}
+                  <div className="bg-[#FCFAF2] text-slate-900 rounded-xl border border-amber-950/10 p-3.5 space-y-3 shadow-md relative border-l-4 border-l-amber-500">
                     {/* Receipt Header */}
                     <div className="flex items-center justify-between border-b border-dashed border-slate-300 pb-1.5 text-[10px] font-black tracking-wider text-slate-700">
                       <span className="flex items-center gap-1">📋 بون المطبخ المعتمد</span>
@@ -178,192 +178,233 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
                     </div>
 
                     {/* Core Recipe Config (Horizontal Clean Layout) */}
-                    <div className="space-y-1.5 text-xs font-sans">
+                    <div className="space-y-2 text-xs font-sans">
                       {/* Bread */}
-                      <div className="flex items-center justify-between border-b border-slate-200/40 pb-1">
+                      <div className="flex items-center justify-between border-b border-slate-200/50 pb-1.5">
                         <div className="flex items-center gap-1.5">
                           <span className="text-sm">🫓</span>
-                          <span className="text-[10px] text-slate-500 font-bold">الخبز:</span>
-                          <span className="font-black text-slate-900">
+                          <span className="text-[11px] text-slate-500 font-bold">الخبز المطلوب:</span>
+                          <span className="font-black text-slate-950">
                             {order.bread === 'saj' ? 'خبز صاج' : 'خبز عربي'}
                           </span>
                         </div>
-                        {currentWrap && (
-                          <span className={`text-[9px] font-black px-1.5 py-0.2 rounded ${
+                        {currentWrap ? (
+                          <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-sm border ${
                             matchStatus?.breadMatch 
-                              ? 'text-emerald-700 bg-emerald-100' 
-                              : 'text-rose-700 bg-rose-100'
+                              ? 'text-emerald-800 bg-emerald-50 border-emerald-200' 
+                              : 'text-rose-800 bg-rose-50 border-rose-200 animate-pulse'
                           }`}>
-                            {matchStatus?.breadMatch ? '✓ صحيح' : '✗ خاطئ'}
+                            {matchStatus?.breadMatch 
+                              ? '✓ صحيح' 
+                              : `✗ خاطئ (تستخدم ${currentWrap.bread === 'saj' ? 'صاج' : 'عربي'})`
+                            }
                           </span>
+                        ) : (
+                          <span className="text-[9px] text-slate-400 font-bold">⌛ في الانتظار</span>
                         )}
                       </div>
 
                       {/* Meat */}
-                      <div className="flex items-center justify-between border-b border-slate-200/40 pb-1">
+                      <div className="flex items-center justify-between border-b border-slate-200/50 pb-1.5">
                         <div className="flex items-center gap-1.5">
                           <span className="text-sm">🥩</span>
-                          <span className="text-[10px] text-slate-500 font-bold">الحشوة:</span>
-                          <span className="font-black text-slate-900">
-                            {order.meat === 'chicken' ? 'دجاج' :
-                             order.meat === 'beef' ? 'لحم عجل' : 'مشكل دبل'}
+                          <span className="text-[11px] text-slate-500 font-bold">الحشوة الأساسية:</span>
+                          <span className="font-black text-slate-950">
+                            {order.meat === 'chicken' ? 'شاورما دجاج' :
+                             order.meat === 'beef' ? 'لحم عجل طازج' : 'شاورما دبل مشكل'}
                           </span>
                         </div>
-                        {currentWrap && (
-                          <span className={`text-[9px] font-black px-1.5 py-0.2 rounded ${
+                        {currentWrap ? (
+                          <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-sm border ${
                             matchStatus?.meatMatch 
-                              ? 'text-emerald-700 bg-emerald-100' 
-                              : 'text-rose-700 bg-rose-100'
+                              ? 'text-emerald-800 bg-emerald-50 border-emerald-200' 
+                              : (currentWrap.fillings.chicken === 0 && currentWrap.fillings.beef === 0)
+                              ? 'text-amber-800 bg-amber-50 border-amber-200 animate-pulse'
+                              : 'text-rose-800 bg-rose-50 border-rose-200 animate-pulse'
                           }`}>
-                            {matchStatus?.meatMatch ? '✓ صحيح' : '✗ خاطئ'}
+                            {matchStatus?.meatMatch 
+                              ? '✓ صحيح' 
+                              : (currentWrap.fillings.chicken === 0 && currentWrap.fillings.beef === 0)
+                              ? '⏳ أضف اللحم باللوحة'
+                              : '✗ لحم خاطئ'
+                            }
                           </span>
+                        ) : (
+                          <span className="text-[9px] text-slate-400 font-bold">⌛ في الانتظار</span>
                         )}
                       </div>
 
                       {/* Serving Style */}
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between border-b border-slate-200/50 pb-1.5">
                         <div className="flex items-center gap-1.5">
                           <span className="text-sm">🍽️</span>
-                          <span className="text-[10px] text-slate-500 font-bold">التقديم:</span>
-                          <span className="font-black text-slate-900">
-                            {order.serveType === 'arabic' ? 'وجبة عربي 🍱' : 'ساندويش 🌯'}
+                          <span className="text-[11px] text-slate-500 font-bold">التقديم النهائي:</span>
+                          <span className="font-black text-slate-950">
+                            {order.serveType === 'arabic' ? 'وجبة عربي 🍱' : 'ساندويش كامل 🌯'}
                           </span>
                         </div>
-                        {currentWrap && (
-                          <span className={`text-[9px] font-black px-1.5 py-0.2 rounded ${
+                        {currentWrap ? (
+                          <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-sm border ${
                             matchStatus?.serveMatch 
-                              ? 'text-emerald-700 bg-emerald-100' 
-                              : 'text-rose-700 bg-rose-100'
+                              ? 'text-emerald-800 bg-emerald-50 border-emerald-200' 
+                              : (order.serveType === 'arabic' && !currentWrap.isSliced)
+                              ? 'text-amber-800 bg-amber-50 border-amber-200 animate-pulse'
+                              : 'text-rose-800 bg-rose-50 border-rose-200'
                           }`}>
-                            {matchStatus?.serveMatch ? '✓ صحيح' : '✗ خاطئ'}
+                            {matchStatus?.serveMatch 
+                              ? '✓ صحيح' 
+                              : (order.serveType === 'arabic' && !currentWrap.isSliced)
+                              ? '⏳ يحتاج تقطيع بالسكين'
+                              : '✗ خطأ (لا تقطعها!)'
+                            }
                           </span>
+                        ) : (
+                          <span className="text-[9px] text-slate-400 font-bold">⌛ في الانتظار</span>
                         )}
                       </div>
                     </div>
 
-                    {/* Extras Requested list */}
-                    <div className="space-y-1 border-t border-dashed border-slate-300 pt-2 text-right">
-                      <span className="text-[9px] text-slate-500 font-bold block">➕ الإضافات المطلوبة:</span>
-                      <div className="flex flex-wrap gap-1">
+                    {/* Interactive Ingredients Checklist */}
+                    <div className="space-y-1.5 border-t border-dashed border-slate-300 pt-2 text-right">
+                      <span className="text-[10px] text-slate-600 font-extrabold block mb-1">➕ حالة المكونات والإضافات بالطلب:</span>
+                      <div className="grid grid-cols-2 gap-1.5 text-[10px]">
                         {/* Garlic */}
-                        {order.garlic && (
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
-                            currentWrap && currentWrap.sauces.garlic 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
-                              : currentWrap 
-                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
-                              : 'bg-white text-slate-700 border-slate-200'
+                        {order.garlic ? (
+                          <div className={`flex items-center justify-between p-1 rounded-md border ${
+                            !currentWrap 
+                              ? 'bg-slate-50 text-slate-500 border-slate-200' 
+                              : currentWrap.sauces.garlic 
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' 
+                              : 'bg-amber-50 text-amber-800 border-amber-200 font-bold animate-pulse'
                           }`}>
                             <span>🧄 ثومية</span>
-                            {currentWrap && (currentWrap.sauces.garlic ? '✓' : '⚠️')}
-                          </span>
+                            <span>{!currentWrap ? '⏳ مطلوب' : currentWrap.sauces.garlic ? '✓ مضاف' : '➕ اضف'}</span>
+                          </div>
+                        ) : (
+                          currentWrap?.sauces.garlic && (
+                            <div className="flex items-center justify-between p-1 rounded-md border bg-rose-50 text-rose-800 border-rose-200 font-bold animate-pulse col-span-2">
+                              <span>🧄 ثومية مضافة</span>
+                              <span>❌ زائد! الزبون يكره الثومية</span>
+                            </div>
+                          )
                         )}
 
                         {/* Tahini */}
-                        {order.tahini && (
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
-                            currentWrap && currentWrap.sauces.tahini 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
-                              : currentWrap 
-                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
-                              : 'bg-white text-slate-700 border-slate-200'
+                        {order.tahini ? (
+                          <div className={`flex items-center justify-between p-1 rounded-md border ${
+                            !currentWrap 
+                              ? 'bg-slate-50 text-slate-500 border-slate-200' 
+                              : currentWrap.sauces.tahini 
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' 
+                              : 'bg-amber-50 text-amber-800 border-amber-200 font-bold animate-pulse'
                           }`}>
                             <span>🧅 طحينة</span>
-                            {currentWrap && (currentWrap.sauces.tahini ? '✓' : '⚠️')}
-                          </span>
+                            <span>{!currentWrap ? '⏳ مطلوب' : currentWrap.sauces.tahini ? '✓ مضاف' : '➕ اضف'}</span>
+                          </div>
+                        ) : (
+                          currentWrap?.sauces.tahini && (
+                            <div className="flex items-center justify-between p-1 rounded-md border bg-rose-50 text-rose-800 border-rose-200 font-bold animate-pulse col-span-2">
+                              <span>🧅 طحينة مضافة</span>
+                              <span>❌ زائد! الزبون يكره الطحينة</span>
+                            </div>
+                          )
                         )}
 
                         {/* Spicy */}
-                        {order.spicy && (
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
-                            currentWrap && currentWrap.sauces.spicy 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
-                              : currentWrap 
-                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
-                              : 'bg-white text-slate-700 border-slate-200'
+                        {order.spicy ? (
+                          <div className={`flex items-center justify-between p-1 rounded-md border ${
+                            !currentWrap 
+                              ? 'bg-slate-50 text-slate-500 border-slate-200' 
+                              : currentWrap.sauces.spicy 
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' 
+                              : 'bg-amber-50 text-amber-800 border-amber-200 font-bold animate-pulse'
                           }`}>
                             <span>🌶️ شطة</span>
-                            {currentWrap && (currentWrap.sauces.spicy ? '✓' : '⚠️')}
-                          </span>
+                            <span>{!currentWrap ? '⏳ مطلوب' : currentWrap.sauces.spicy ? '✓ مضاف' : '➕ اضف'}</span>
+                          </div>
+                        ) : (
+                          currentWrap?.sauces.spicy && (
+                            <div className="flex items-center justify-between p-1 rounded-md border bg-rose-50 text-rose-800 border-rose-200 font-bold animate-pulse col-span-2">
+                              <span>🌶️ شطة مضافة</span>
+                              <span>❌ زائد! الزبون يكره الشطة</span>
+                            </div>
+                          )
                         )}
 
                         {/* Pickles */}
-                        {order.pickles && (
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
-                            currentWrap && currentWrap.fillings.pickles 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
-                              : currentWrap 
-                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
-                              : 'bg-white text-slate-700 border-slate-200'
+                        {order.pickles ? (
+                          <div className={`flex items-center justify-between p-1 rounded-md border ${
+                            !currentWrap 
+                              ? 'bg-slate-50 text-slate-500 border-slate-200' 
+                              : currentWrap.fillings.pickles 
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' 
+                              : 'bg-amber-50 text-amber-800 border-amber-200 font-bold animate-pulse'
                           }`}>
                             <span>🥒 مخلل</span>
-                            {currentWrap && (currentWrap.fillings.pickles ? '✓' : '⚠️')}
-                          </span>
+                            <span>{!currentWrap ? '⏳ مطلوب' : currentWrap.fillings.pickles ? '✓ مضاف' : '➕ اضف'}</span>
+                          </div>
+                        ) : (
+                          currentWrap?.fillings.pickles ? (
+                            <div className="flex items-center justify-between p-1 rounded-md border bg-rose-50 text-rose-800 border-rose-200 font-bold animate-pulse col-span-2">
+                              <span>🥒 مخلل مضاف</span>
+                              <span>❌ زائد! بدون مخلل بالطلب</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-between p-1 rounded-md border bg-slate-100 text-slate-400 border-slate-200 line-through">
+                              <span>🥒 بدون مخلل</span>
+                              <span>✓ صحيح</span>
+                            </div>
+                          )
                         )}
 
                         {/* Fries */}
-                        {order.fries && (
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
-                            currentWrap && currentWrap.fillings.fries 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
-                              : currentWrap 
-                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
-                              : 'bg-white text-slate-700 border-slate-200'
+                        {order.fries ? (
+                          <div className={`flex items-center justify-between p-1 rounded-md border ${
+                            !currentWrap 
+                              ? 'bg-slate-50 text-slate-500 border-slate-200' 
+                              : currentWrap.fillings.fries 
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' 
+                              : 'bg-amber-50 text-amber-800 border-amber-200 font-bold animate-pulse'
                           }`}>
                             <span>🍟 بطاطا</span>
-                            {currentWrap && (currentWrap.fillings.fries ? '✓' : '⚠️')}
-                          </span>
+                            <span>{!currentWrap ? '⏳ مطلوب' : currentWrap.fillings.fries ? '✓ مضاف' : '➕ اضف'}</span>
+                          </div>
+                        ) : (
+                          currentWrap?.fillings.fries ? (
+                            <div className="flex items-center justify-between p-1 rounded-md border bg-rose-50 text-rose-800 border-rose-200 font-bold animate-pulse col-span-2">
+                              <span>🍟 بطاطا مضافة</span>
+                              <span>❌ زائد! بدون بطاطا بالطلب</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-between p-1 rounded-md border bg-slate-100 text-slate-400 border-slate-200 line-through">
+                              <span>🍟 بدون بطاطا</span>
+                              <span>✓ صحيح</span>
+                            </div>
+                          )
                         )}
 
                         {/* Pomegranate */}
-                        {order.pomegranate && (
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded border transition-all flex items-center gap-0.5 font-bold ${
-                            currentWrap && currentWrap.fillings.pomegranate 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300 shadow-sm' 
-                              : currentWrap 
-                              ? 'bg-amber-100 text-amber-800 border-amber-300 animate-pulse' 
-                              : 'bg-white text-slate-700 border-slate-200'
+                        {order.pomegranate ? (
+                          <div className={`flex items-center justify-between p-1 rounded-md border ${
+                            !currentWrap 
+                              ? 'bg-slate-50 text-slate-500 border-slate-200' 
+                              : currentWrap.fillings.pomegranate 
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-bold' 
+                              : 'bg-amber-50 text-amber-800 border-amber-200 font-bold animate-pulse'
                           }`}>
                             <span>🍯 دبس رمان</span>
-                            {currentWrap && (currentWrap.fillings.pomegranate ? '✓' : '⚠️')}
-                          </span>
+                            <span>{!currentWrap ? '⏳ مطلوب' : currentWrap.fillings.pomegranate ? '✓ مضاف' : '➕ اضف'}</span>
+                          </div>
+                        ) : (
+                          currentWrap?.fillings.pomegranate && (
+                            <div className="flex items-center justify-between p-1 rounded-md border bg-rose-50 text-rose-800 border-rose-200 font-bold animate-pulse col-span-2">
+                              <span>🍯 دبس رمان مضاف</span>
+                              <span>❌ زائد! بدون دبس رمان</span>
+                            </div>
+                          )
                         )}
                       </div>
                     </div>
-
-                    {/* Exclusions list - highlighted in red */}
-                    {(!order.pickles || !order.fries) && (
-                      <div className="space-y-1 border-t border-dashed border-slate-300 pt-2 text-right">
-                        <span className="text-[9px] text-rose-600 font-bold block">🚫 ممنوع منعا باتا (تحذير):</span>
-                        <div className="flex flex-wrap gap-1">
-                          {!order.pickles && (
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 font-bold ${
-                              currentWrap && currentWrap.fillings.pickles 
-                                ? 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse' 
-                                : currentWrap 
-                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
-                                : 'bg-[#FFF5F5] text-rose-700 border-rose-200'
-                            }`}>
-                              <span>بدون مخلل</span>
-                              {currentWrap && (currentWrap.fillings.pickles ? '❌ خطأ!' : '✓')}
-                            </span>
-                          )}
-
-                          {!order.fries && (
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded border flex items-center gap-0.5 font-bold ${
-                              currentWrap && currentWrap.fillings.fries 
-                                ? 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse' 
-                                : currentWrap 
-                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
-                                : 'bg-[#FFF5F5] text-rose-700 border-rose-200'
-                            }`}>
-                              <span>بدون بطاطا</span>
-                              {currentWrap && (currentWrap.fillings.fries ? '❌ خطأ!' : '✓')}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
 
                     {/* Realtime Live assembly matching state */}
                     {currentWrap && (
@@ -372,9 +413,9 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
                         <span className={`px-2 py-0.5 rounded-full ${
                           matchStatus?.allMatch 
                             ? 'bg-emerald-100 text-emerald-800' 
-                            : 'bg-amber-100 text-amber-800'
+                            : 'bg-amber-100 text-amber-800 animate-pulse'
                         }`}>
-                          {matchStatus?.allMatch ? '🎯 متطابق ومثالي!' : '⌛ قيد التحضير والتعديل'}
+                          {matchStatus?.allMatch ? '🎯 متطابق ومثالي 100%' : '⏳ قيد التحضير والتعديل'}
                         </span>
                       </div>
                     )}
@@ -387,12 +428,21 @@ export const CustomersArea: React.FC<CustomersAreaProps> = ({
                       disabled={!isWrapReadyToServe()}
                       className={`w-full py-2.5 px-3 rounded-lg flex items-center justify-center gap-1.5 text-xs font-black transition-all cursor-pointer ${
                         isWrapReadyToServe()
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 shadow-lg shadow-orange-500/20 active:scale-[0.98]'
+                          ? matchStatus?.allMatch
+                            ? 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-black shadow-lg shadow-emerald-500/30 hover:scale-[1.02] border border-emerald-400/40 animate-bounce'
+                            : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black shadow-lg shadow-orange-500/20 hover:scale-[1.01]'
                           : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
                       }`}
                     >
                       <Check className="w-4 h-4 stroke-[3px]" />
-                      <span>قدّم الشاورما الحالية له 🛎️</span>
+                      <span>
+                        {isWrapReadyToServe()
+                          ? matchStatus?.allMatch
+                            ? 'قدّم الطلب المثالي الآن! 🎯🛎️'
+                            : 'قدّم الساندويش مع وجود أخطاء ⚠️🛎️'
+                          : 'قدّم الشاورما الحالية له 🛎️'
+                        }
+                      </span>
                     </button>
                   </div>
                 </motion.div>

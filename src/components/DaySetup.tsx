@@ -98,15 +98,87 @@ export const DaySetup: React.FC<DaySetupProps> = ({
   };
 
   const ingredientSpecs = [
-    { key: 'pita' as keyof Inventory, name: '🫓 خبز عربي كلاسيكي', price: prices.pita, available: true, unit: 'رغيف' },
-    { key: 'saj' as keyof Inventory, name: '🌯 خبز صاج ملكي', price: prices.saj, available: upgrades.unlockedSaj, unit: 'رغيف' },
-    { key: 'chicken' as keyof Inventory, name: '🍗 لحم دجاج خام للسيخ', price: prices.chickenMeat, available: true, unit: 'حصة استواء' },
-    { key: 'beef' as keyof Inventory, name: '🥩 لحم عجل خام للسيخ', price: prices.beefMeat, available: upgrades.unlockedBeef, unit: 'حصة استواء' },
-    { key: 'garlic' as keyof Inventory, name: '🧄 حصص صوص الثومية', price: prices.garlic, available: !upgrades.autoGarlic, unit: 'حصة صوص' },
-    { key: 'tahini' as keyof Inventory, name: '🧅 حصص صوص الطحينة', price: prices.tahini, available: upgrades.unlockedBeef && !upgrades.autoGarlic, unit: 'حصة صوص' },
-    { key: 'pickles' as keyof Inventory, name: '🥒 مخلل مقطع شرائح', price: prices.pickles, available: true, unit: 'وعاء شرائح' },
-    { key: 'fries' as keyof Inventory, name: '🍟 بطاطا أصابع للقلي', price: prices.fries, available: true, unit: 'سلة للقلي' },
-    { key: 'pomegranate' as keyof Inventory, name: '🍯 دبس رمان فاخر', price: prices.pomegranate, available: true, unit: 'حصة صوص' },
+    { 
+      key: 'pita' as keyof Inventory, 
+      name: '🫓 خبز عربي كلاسيكي', 
+      price: prices.pita, 
+      unlocked: true, 
+      automated: false,
+      lockText: '',
+      unit: 'رغيف' 
+    },
+    { 
+      key: 'saj' as keyof Inventory, 
+      name: '🌯 خبز صاج ملكي', 
+      price: prices.saj, 
+      unlocked: upgrades.unlockedSaj, 
+      automated: false,
+      lockText: 'يتطلب شراء ترقية "خبز الصاج الملكي" من متجر التطويرات ($130)',
+      unit: 'رغيف' 
+    },
+    { 
+      key: 'chicken' as keyof Inventory, 
+      name: '🍗 لحم دجاج خام للسيخ', 
+      price: prices.chickenMeat, 
+      unlocked: true, 
+      automated: false,
+      lockText: '',
+      unit: 'حصة استواء' 
+    },
+    { 
+      key: 'beef' as keyof Inventory, 
+      name: '🥩 لحم عجل خام للسيخ', 
+      price: prices.beefMeat, 
+      unlocked: upgrades.unlockedBeef, 
+      automated: false,
+      lockText: 'يتطلب شراء ترقية "شاورما اللحم الفاخر" من متجر التطويرات ($180)',
+      unit: 'حصة استواء' 
+    },
+    { 
+      key: 'garlic' as keyof Inventory, 
+      name: '🧄 حصص صوص الثومية', 
+      price: prices.garlic, 
+      unlocked: true, 
+      automated: upgrades.autoGarlic,
+      lockText: '',
+      unit: 'حصة صوص' 
+    },
+    { 
+      key: 'tahini' as keyof Inventory, 
+      name: '🧅 حصص صوص الطحينة', 
+      price: prices.tahini, 
+      unlocked: upgrades.unlockedBeef, 
+      automated: upgrades.autoGarlic,
+      lockText: 'يتطلب تفعيل شاورما اللحم أولاً بشراء ترقية "شاورما اللحم الفاخر" ($180)',
+      unit: 'حصة صوص' 
+    },
+    { 
+      key: 'pickles' as keyof Inventory, 
+      name: '🥒 مخلل مقطع شرائح', 
+      price: prices.pickles, 
+      unlocked: true, 
+      automated: false,
+      lockText: '',
+      unit: 'وعاء شرائح' 
+    },
+    { 
+      key: 'fries' as keyof Inventory, 
+      name: '🍟 بطاطا أصابع للقلي', 
+      price: prices.fries, 
+      unlocked: true, 
+      automated: false,
+      lockText: '',
+      unit: 'سلة للقلي' 
+    },
+    { 
+      key: 'pomegranate' as keyof Inventory, 
+      name: '🍯 دبس رمان فاخر', 
+      price: prices.pomegranate, 
+      unlocked: true, 
+      automated: false,
+      lockText: '',
+      unit: 'حصة صوص' 
+    },
   ];
 
   return (
@@ -133,7 +205,50 @@ export const DaySetup: React.FC<DaySetupProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1">
             {ingredientSpecs.map((item) => {
-              if (!item.available) return null;
+              if (item.automated) {
+                return (
+                  <div
+                    key={item.key}
+                    className="bg-slate-950/40 rounded-xl p-3 border border-emerald-950/30 opacity-80 flex flex-col justify-between gap-1.5"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-bold text-xs text-slate-400 line-through">{item.name}</h4>
+                        <span className="text-[10px] text-emerald-400 font-bold block mt-1">
+                          🔄 صوص مدمج وتلقائي مجاني!
+                        </span>
+                      </div>
+                    </div>
+                    <div className="bg-emerald-950/20 border border-emerald-900/20 p-2 rounded text-[10px] text-emerald-300 leading-normal text-right font-sans">
+                      لقد اشتريت ترقية "أتمتة صب الصوصات". المطبخ يزودك به مجاناً وبلا نهاية أثناء العمل، لا حاجة لشرائه مجدداً!
+                    </div>
+                  </div>
+                );
+              }
+
+              if (!item.unlocked) {
+                return (
+                  <div
+                    key={item.key}
+                    className="bg-slate-950/30 rounded-xl p-3 border border-slate-900/50 opacity-60 flex flex-col justify-between gap-1.5"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-bold text-xs text-slate-500 flex items-center gap-1">
+                          <span>🔒</span>
+                          <span className="line-through">{item.name}</span>
+                        </h4>
+                        <span className="text-[9px] text-rose-400 font-bold block mt-1">
+                          {item.lockText}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="bg-slate-900/60 border border-slate-850 p-2 rounded text-[10px] text-slate-400 leading-normal text-right font-sans">
+                      انتقل إلى علامة تبويب "متجر التطويرات" واشتر الترقية المطلوبة لتفعيل هذا المكون في المطبخ ومستودع التموين.
+                    </div>
+                  </div>
+                );
+              }
 
               const inCart = cart[item.key] || 0;
               const inStock = inventory[item.key];
